@@ -1,0 +1,297 @@
+\documentclass[a4paper]{article}
+% \usepackage[margin=1.25in]{geometry}
+\usepackage[inner=2.0cm,outer=2.0cm,top=2.5cm,bottom=2.5cm]{geometry}
+% \usepackage{ctex}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{enumerate}
+
+\newcommand{\homework}[5]{
+    \pagestyle{myheadings}
+    \thispagestyle{plain}
+    \newpage
+    \setcounter{page}{1}
+    \noindent
+    \begin{center}
+    \framebox{
+        \vbox{\vspace{2mm}
+        \hbox to 6.28in { {\bf Optimization Methods \hfill #2} }
+        \vspace{6mm}
+        \hbox to 6.28in { {\Large \hfill #1 \hfill} }
+        \vspace{6mm}
+        \hbox to 6.28in { {\it Instructor: {\rm #3} \hfill Name: {\rm #4}, StudentId: {\rm #5}}}
+        \vspace{2mm}}
+    }
+    \end{center}
+    % \markboth{#4 -- #1}{#4 -- #1}
+    \vspace*{4mm}
+}
+
+\newenvironment{solution}
+{\color{blue} \paragraph{Solution.}}
+{\newline \qed}
+
+\begin{document}
+%==========================Put your name and id here==========================
+\homework{Homework 1}{Fall 2019}{Lijun Zhang}{Renzhe Zhou}{181220076}
+
+\paragraph{Notice}
+\begin{itemize}
+    \item The submission email is: \textbf{njuoptfall2019@163.com}.
+    \item Please use the provided \LaTeX{} file as a template. If you are not familiar with \LaTeX{}, you can also use Word to generate a \textbf{PDF} file.
+\end{itemize}
+
+
+
+\paragraph{Problem 1: Norms}
+~
+
+A function $f:\mathbb{R}^n \leftarrow \mathbb{R}$ with $\text{dom}f=\mathbb{R}^n$ is called a \textit{norm} if
+\begin{itemize}
+    \item $f$ is nonnegative: $f(x) \geq 0$ for all $x \in \mathbb{R}^n$
+    \item $f$ is definite: $f(x) = 0$ only if $x=0$
+    \item $f$ is homogeneous: $f(tx)=|t|f(x)$, for all $x \in \mathbb{R}^n$ and $t \in \mathbb{R}$
+    \item $f$ satisfies the triangle inequality: $f(x+y) \leq f(x) + f(y)$, for all $x,y \in  v$
+\end{itemize}
+We use the notation $f(x) = \|x\|$. Let $\| \cdot \|$ be a norm on $\mathbb{R}^{n}$.
+The associated dual norm, denoted $\| \cdot \|_*$, is defined as
+$$\|z\|_* = \sup \{z^Tx | \|x\| \leq 1\}$$
+
+\noindent
+\begin{enumerate}[a)]
+    \item Prove that $\|\cdot\|_*$ is a valid norm.
+    \item Prove that the dual of the Euclidean norm ($\ell_2$-norm) is the Euclidean norm, \emph{i.e.}, prove that
+$$\|z\|_{2*} = \sup \{z^Tx | \|x\|_2 \leq 1\} = \|z\|_2$$.\\ (\textit{Hint:} Use Cauchy–Schwarz inequality.)
+\end{enumerate}
+\begin{solution}
+Question a):\\
+Make g(z)=$\|z\|_*$, $ \sup \{z^Tx\} = sup \{\sum_{i=1}^nz_ix_i\}$, s.t. $\,0\leq \|x\|\leq1$. That is, to maximize it if $z_i<0$ then $x_i\leq0$ too, if $z_i\ge0$ then $x_i\ge0$ too. Therefore, $\sum_{i=1}^nz_ix_i\ge0$, which means $\| \cdot \|_*$ is nonnegative.\\
+$sup \{\sum_{i=1}^nz_ix_i\}=0$ and $z_ix_i\ge0$, so $z_ix_i=0$ for any x, so $z_i=0$, so $z=0$. And when z=0, obviously $g(z)=0$. Therefore, $g(z)=0$ if and only is $z=0$.\\
+$g(tz)=\sup \{tz^Tx|\|x\|\leq1\}=|t|sup \{z^Tx|\|x\|\leq1\}=|t|g(z)$,so g is homogeneous.\\
+To prove $g(z_1+z_2)\leq g(z_1)+g(z_2)$, is to prove $\sup((z_1+z_2)^Tx)\leq \sup(z_1^Tx)+\sup(z_2^Tx),s.t.\,0\leq \|x\|\leq1$,assume they are $(z_1+z_2)^Tx_0,z_1^Tx_1,z_2^Tx_2$
+then we need to prove $z_1^Tx_0+z_2^Tx_0\leq z_1^Tx_1+z_2^Tx_2$, because $x_1$ and $x_2$ respectively maximize $z_1^Tx$ and $z_2^Tx$, so $z_1^Tx_0$ and $z_2^Tx_0$ will be no more than $z_1^Tx_1$ and $z_2^Tx_2$, so $g(z_1+z_2)\leq g(z_1)+g(z_2)$.\\
+Above all, $\|\cdot\|_*$ is a norm.\\
+Question b):\\
+Because $|z^Tx|\leq \|z\|_2\|x\|_2$, so $\sup \{z^Tx | \|x\|_2 \leq 1\}\leq \|z\|_2\|x\|_2$, I am going to prove $\sup \{z^Tx | \|x\|_2 \leq 1\}= \|z\|_2\|x\|_2$.\\
+Let's see if $\sup \{z^Tx | \|x\|_2 \leq 1\}$ can up to $\|z\|_2\|x\|_2$. Conditions for Cauchy–Schwarz inequality to hold is $x=kz$ in which $k\in R$.\\
+When z=0, Obviously $\sup \{z^Tx | \|x\|_2 \leq 1\}=\|z\|_2\|x\|_2=0$.\\
+When $z\neq 0$, $\|x\|_2\leq 1 \to \|kz\|_2\leq 1 \to |k|\leq \frac{1}{\|z\|_2}$, suck a k is available. So $\sup \{z^Tx | \|x\|_2 \leq 1\}=\|z\|_2\|x\|_2$ when x is kz, and $\|x\|_2 \leq 1$, to maximize it $\|x\|_2$ should be 1. Therefore $\sup \{z^Tx | \|x\|_2 \leq 1\}=\|z\|_2\|x\|_2=\|z\|_2$.
+\end{solution}
+
+\paragraph{Problem 2: Affine and Convex Sets}
+~
+
+Affine sets $C_{a}$ and convex $C_{c}$ sets are the sets satisfying the constraints below:
+\begin{equation}
+\begin{aligned}
+    \theta x_1 + (1-\theta)x_2 \in C_{a}\\
+    \text{s.t. } x_1, x_2 \in C_{a}\\
+\end{aligned}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+    \theta x_1 + (1-\theta)x_2 \in C_{c}\\
+    \text{s.t. } x_1, x_2 \in C_{c}, 0 \geq \theta \leq 1\\
+\end{aligned}
+\end{equation}
+
+\noindent
+\begin{enumerate}[a)]
+    % \item Can we hold that $D$ is convex if $D$ is affine?
+    \item Is the set $\{  \alpha \in \mathbb{R}^k | p(0)=1, |p(t)|\leq1 \text{ for } \alpha \leq t \leq \beta\}$, where $p(t) = \alpha_1+\alpha_2t+\cdots+\alpha_kt^{k-1}$, affine?
+    \item Determine if each set below is convex.
+        \begin{enumerate}[1)]
+            \item $\{  (x,y)\in \mathbf{R}^2_{++} | x/y \leq 1 \}$.
+            \item $\{  (x,y)\in \mathbf{R}^2_{++} | x/y \geq 1 \}$.
+            \item $\{  (x,y)\in \mathbf{R}^2_{+} | xy \leq 1 \}$.
+            \item $\{  (x,y)\in \mathbf{R}^2_{+} | xy \geq 1 \}$.
+            \item $\{  (x,y)\in \mathbf{R}^2 | y = \text{tanh}(x) = \frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}\}$.
+        \end{enumerate}
+\end{enumerate}
+
+\begin{solution}
+Question a):\\
+Make $\alpha=(\alpha_1,\alpha_2,\cdots,\alpha_k)^T$,$T=(1,t,t^2,\cdots,t^{(k-1)})^T$,so $p(t)=\alpha^TT$,assume m,n in the set, we have $m_1=1,n_1=1$, $|m^TT|\leq 1,|n^TT|\leq 1$,
+make $k=\theta m+(1-\theta)n$, then $k_1=\theta m_1+(1-\theta)n_1=\theta +1-\theta=1$, and $|k^TT|=|\{\theta m+(1-\theta)n\}^TT|=|\{\theta m^T+(1-\theta)n^T\}T|=|\theta
+m^TT+(1-\theta)n^TT|$, let's take $m^TT=1,n^TT=-1$ and $\theta=100$, then it becomes $|\theta m^TT|+|(1-\theta)n^TT|=\theta m^TT+(\theta-1)|n^TT|=199$, so it is not in the set, which means the set is not affine.\\
+Question b):\\
+1):Assume $(x_1,y_1),(x_2,y_2)$ in the set, we have $x_1\leq y_1,x_2\leq y_2$, so for $(\theta x_1+(1-\theta)x_2,\theta y_1+(1-\theta)y_2)$, we have $\frac{\theta x_1+(1-\theta)x_2}{\theta y_1+(1-\theta)y_2}\leq \frac{\theta y_1+(1-\theta)y_2}{\theta y_1+(1-\theta)y_2}=1$, so it is convex.\\
+2):The solution is similar to 1), and it is convex too.\\
+3):Assume $(x_1,y_1),(x_2,y_2)$ in the set, we have $x_1y_1\leq 1,x_2y_2\leq 1$, then $((\theta x_1+(1-\theta)x_2)(\theta y_1+(1-\theta)y_2))=\theta^2x_1y_1+\theta(1-\theta)(x_1y_2+x_2y_1)+(1-\theta)^2x_2y_2$, when $\theta=\frac{1}{2},x_1=10,y_1=\frac{1}{10},x_2=\frac{1}{10},y_2=10$, it is equal to $25+\frac{201}{400}$, so it is not convex.\\
+4):the solution is similar to 3), and it is not convex too.\\
+5):if the set is convex, then $y=tanh(x)$ should be linear additive, that is to say $\tanh(ax_1+bx_2)=a\tanh(x_1)+b\tanh(x_2)$, obviously this is not a linear addictive function, so the set is not convex.\\
+\end{solution}
+
+\paragraph{Problem 3: Examples}
+~
+\begin{enumerate}[a)]
+\item Let $C \subseteq \mathbb{R}^n$ be the solution set of a quadratic inequality,
+    \begin{equation}
+        C = \{ x\in \mathbb{R}^n | x^\top Ax+b^\top x+c \leq 0\}\,,
+    \end{equation}
+    with $A \in \mathbb{S}^n, b \in \mathbb{R}^n, \text{and } c \in \mathbb{R}$.
+
+    \noindent
+    \begin{enumerate}[1)]
+        \item Show that $C$ is convex if $A \succeq 0$.
+        \item Is the following statement true? The intersection of $C$ and the hyperplane defined by $g^\top x+h=0$ is convex if $A+\lambda gg^\top \succeq 0$ for some $\lambda \in \mathbb{R}$.
+    \end{enumerate}
+\item The polar of $C\subseteq \mathbb{R}^n$ is defined as the set
+$$C^\circ = \{ y\in \mathbb{R}^n | y^\top x\leq 1 \text{ for all }x \in C\}$$\,.
+    \noindent
+    \begin{enumerate}[1)]
+        \item Show that $C^\circ$ is affine.
+        \item What is a polar of a polyhedra?
+        \item What is the polar of the unit ball for a norm $||\cdot||$?
+        \item Show that if $C$ is closed and convex, with $0 \in C$, then $(C^\circ)^\circ = C$
+    \end{enumerate}
+\end{enumerate}
+
+% Let $C$ and $D$ be closed convex cones in $\mathbf{R}^n$.
+
+% \noindent
+% \begin{enumerate}[a)]
+%     \item Show that $C \cap D$ and $C^* + D^*$ are convex cones.
+%     \item Show that $(C \cap D)^* \supseteq C^* + D^*$.
+%     \item Show that $(C \cap D)^* \subseteq C^* + D^*$.
+% \end{enumerate}
+
+\begin{solution}
+Question a):\\
+1):A set is convex implies its intersection with any line is convex.\\
+We take a line $ \{ x'+tv | t \in \mathbb{R}\}$, and make $(x'+tv)^\top A(x'+tv)+b^\top (x'+tv)+c=\alpha t^2+\beta t +\gamma$ where $\alpha=v^TAv,\beta=b^Tv+2x'^TAv,\gamma=x'^TAx'+b^Tx'+c$.\\
+Its intersection with C becomes $ \{ x'+tv | \alpha t^2+\beta t +\gamma\leq 0 \}$.\\
+When $\alpha \geq 0$, it is convex because the solution would be a line segment or a dot or empty. When $\alpha <0$, it is not convex because the solution would be two rays.\\
+And because $A \succeq 0$, so $\alpha=v^TAv \geq 0$ for all $v$, so C is convex.\\
+2):The statement is true.\\
+Let $D=\{x \in \mathbb{R}^n|g^Tx+h=0\},E=C\cap D$, and in line $ \{ x'+tv | t \in \mathbb{R}\}$ we take $x' \in D$ so $g^Tx'+h=0$. Then line $ \{ x'+tv | t \in \mathbb{R}\}$ 's intersection with E is $\{x'+tv|\alpha t^2+\beta t +\gamma \leq 0,g^T(x'+tv)+h=0\}$, because $g^T(x'+tv)+h=g^Tx'+h+g^Tv=g^Tvt=0$, the intersection becomes
+\begin{equation}
+\{x'+tv|\alpha t^2+\beta t +\gamma \leq 0,g^Tvt=0\}
+\end{equation}
+If $g^Tv\ne 0$, then t=0, which means the intersection solution is a dot or empty, in this case E is convex.\\
+If $g^Tv=0$, then we are back to case 1): $ \{ x'+tv | \alpha t^2+\beta t +\gamma\leq 0 \}$, and $v^TAv=v^TAv+0=v^TAv+v^Tg=v^TAv+v^Tgg^Tv=v^TAv+\lambda v^Tgg^Tv=v^T(A+\lambda gg^T)v$, because $(A+\lambda gg^T) \succeq 0$, so $v^T(A+\lambda gg^T)v \geq 0$, so in this case E is convex too.\\
+Above all, E is convex.\\
+Question b):\\
+1):$C^\circ$ is the intersection of a number of halfspaces, so it is convex.\\
+2):The polar of a polyhedra is unit simplex.\\
+3):The unit ball of $\|x\|$ is $\{x \in \mathbb{R}^n|\|x\| \leq 1 \}$, the dual norm is $\|z\|_*=\sup \{z^Tx| \|x\| \leq 1\}$, and the unit ball of $\|z\|_*$ is $\{z \in \mathbb{R}^n|\|z\|_* \leq 1 \}$, which equivalents to $\{z \in \mathbb{R}^n|z^Tx\leq 1, \|x\| \leq 1 \}$, and that is the polar of $\{x \in \mathbb{R}^n|\|x\| \leq 1 \}$, so the polar of norm $||\cdot||$ is the dual norm's unit ball.\\
+4):Make $K=C^\circ=\{y \in \mathbb{R}^n|y^\top x\leq 1 \text{ for all }x \in C\}$,then $K^\circ=\{z \in \mathbb{R}^n|z^\top y\leq 1 \text{ for all }y \in K\}$, which can be written as $\{z \in \mathbb{R}^n|z^\top y\leq 1,x^\top y\leq 1 \text{ for all }x \in C\}$, we can guess z=x, and this assumption is true because C is closed and convex and $0 \in C$, so such a transformation keeps all x in C remaining as z. Therefore, $K^\circ=C,\text{ so } (C^\circ)^\circ=C$, and we are done.
+\end{solution}
+
+\paragraph{Problem 4: Operations That Preserve Convexity}
+~
+
+Suppose $\phi : \mathbb{R}^n \rightarrow \mathbb{R}^m \text{ and } \psi : \mathbb{R}^m \rightarrow \mathbb{R}^p$ are the linear-fractional functions
+\begin{equation}
+\phi(x) = \frac{Ax+b}{c^\top x + d}, \psi(y) = \frac{Ey+f}{g^\top y + h},
+\end{equation}
+with domains \textbf{dom }$\phi = \{ x | c^\top x + d > 0 \}$, \textbf{dom }$\psi = \{ y | g^\top y + h > 0 \}$. We associate with $\phi$ and $\psi$ the matrices
+\begin{equation}
+  \left[\begin{matrix}
+   A & b \\
+   c^\top & d
+  \end{matrix}\right]\,,
+  \left[\begin{matrix}
+   E & f \\
+   g^\top & h
+  \end{matrix}\right]\,,
+\end{equation}
+respectively.
+
+Now, consider the composition $\Gamma$ of $\phi$ and $\psi$, \emph{i.e.}, $\Gamma(x)=\psi(\phi(x))$, with domain
+\begin{equation}
+\textbf{dom} \Gamma = \{ x \in \textbf{dom } \phi | \phi(x) \in \textbf{dom } \psi\} \,.
+\end{equation}
+
+Show that $\Gamma$ is linear-fractional, and that the matrix associate with it is the product
+\begin{equation}
+  \left[\begin{matrix}
+   E & f \\
+   g^\top & h
+  \end{matrix}\right]
+  \left[\begin{matrix}
+   A & b \\
+   c^\top & d
+  \end{matrix}\right]\,.
+\end{equation}
+% Let $C$ and $D$ be closed convex cones in $\mathbf{R}^n$.
+
+% \noindent
+% \begin{enumerate}[a)]
+%     \item Show that $C \cap D$ and $C^* + D^*$ are convex cones.
+%     \item Show that $(C \cap D)^* \supseteq C^* + D^*$.
+%     \item Show that $(C \cap D)^* \subseteq C^* + D^*$.
+% \end{enumerate}
+
+\begin{solution}
+Firstly we have $A \in \mathbb{R}^{m\times n},E \in \mathbb{R}^{n\times m},b,g \in \mathbb{R}^m,f,c \in \mathbb{R}^n,d,h \in \mathbb{R}$. \\
+\begin{equation}
+\psi(\phi(x)) = \frac{E\phi(x)+f}{g^\top \phi(x) + h}=\frac{E\frac{Ax+b}{c^\top x + d}+f}{g^\top \frac{Ax+b}{c^\top x + d} + h}
+=\frac{E(Ax+b)+f(c^\top x+d)}{g^\top (Ax+b)+h(c^\top x+d)}=\frac{(EA+fc^\top)x+Eb+fd}{(g^\top A+hc^\top)x+g^\top b+hd}\\
+\end{equation}
+and $EA+fc^\top \in \mathbb{R}^{n\times n},Eb+fd \in \mathbb{R}^n,g^\top A+hc^\top \in \mathbb{R}^n,g^\top b+hd \in \mathbb{R}$. So $\psi(\phi(x))$ is linear-fractional. Because
+\begin{equation}
+  \left[\begin{matrix}
+   E & f \\
+   g^\top & h
+  \end{matrix}\right]
+  \left[\begin{matrix}
+   A & b \\
+   c^\top & d
+  \end{matrix}\right]=
+  \left[\begin{matrix}
+   EA+fc^\top & Eb+fd \\
+   g^\top A+hc^\top & g^\top b+hd
+  \end{matrix}\right]
+\end{equation}
+so the the matrix associate with it is the product above.
+\end{solution}
+
+\paragraph{Problem 5: Generalized Inequalities}
+~
+
+Let $K^*$ be the dual cone of a convex cone $K$. Prove the following
+\begin{enumerate}[1)]
+    \item $K^*$ is indeed a convex cone.
+    \item $K_1 \subseteq K_2$ implies $K_1^* \subseteq K_2^*$.
+\end{enumerate}
+\begin{solution}
+Question 1):\\
+$K^*=\{y|x^Ty\ge 0,\forall x \in K\}$, which means $K^*$ is the intersection of a set of homogeneous halfspaces, so it is a convex cone.\\
+Question 2):\\
+Assume $y \in K_2^*$, because $x^Ty\ge 0,\forall x \in K_2$ and $K_1 \subseteq K_2$, so $x^Ty\ge 0,\forall x \in K_1$, which means $y\in K_1^*$, so $K_1^* \subseteq K_2^*$.
+\end{solution}
+
+% \paragraph{Problem 3: Dual Cones and Generalized Inequalities}
+% ~
+% \noindent
+% \begin{enumerate}[a)]
+%     \item Find the dual cone of $\{(x_1, x_2) | |x_1| \leq |x_2| \}$.
+%     \item Let $K^*$ be the dual cone of a convex cone $K$. Prove the following
+%         \begin{enumerate}[1)]
+%             \item $K^*$ is indeed a convex cone.
+%             \item $K_1 \subseteq K_2$ implies $K_1^* \subseteq K_2^*$.
+%             \item $K^{**}$ is the closure of $K$.
+%         \end{enumerate}
+% \end{enumerate}
+
+% \begin{solution}
+%     Write your solution here.
+% \end{solution}
+
+% \paragraph{Problem 5: Supporting Hyperplanes}
+% ~
+
+% Can we hold the separating hyperplane theorem with two disjoint non-convex sets.
+
+% \begin{solution}
+%     Write your solution here.
+% \end{solution}
+
+\end{document} 

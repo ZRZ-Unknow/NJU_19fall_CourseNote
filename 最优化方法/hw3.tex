@@ -1,0 +1,317 @@
+\documentclass[a4paper]{article}
+% \usepackage[margin=1.25in]{geometry}
+\usepackage[inner=2.0cm,outer=2.0cm,top=2.5cm,bottom=2.5cm]{geometry}
+% \usepackage{ctex}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{multirow}
+\usepackage{mathtools}
+\usepackage{enumerate}
+
+\newcommand{\homework}[5]{
+    \pagestyle{myheadings}
+    \thispagestyle{plain}
+    \newpage
+    \setcounter{page}{1}
+    \noindent
+    \begin{center}
+    \framebox{
+        \vbox{\vspace{2mm}
+        \hbox to 6.28in { {\bf Optimization Methods \hfill #2} }
+        \vspace{6mm}
+        \hbox to 6.28in { {\Large \hfill #1 \hfill} }
+        \vspace{6mm}
+        \hbox to 6.28in { {\it Instructor: {\rm #3} \hfill Name: {\rm #4}, StudentId: {\rm #5}}}
+        \vspace{2mm}}
+    }
+    \end{center}
+    % \markboth{#4 -- #1}{#4 -- #1}
+    \vspace*{4mm}
+}
+
+
+\newenvironment{solution}
+{\color{blue} \paragraph{Solution.}}
+{\newline \qed}
+
+\begin{document}
+%==========================Put your name and id here==========================
+\homework{Homework 3}{Fall 2019}{Lijun Zhang}{Renzhe Zhou}{181220076}
+
+\paragraph{Notice}
+\begin{itemize}
+    \item The submission email is: \textbf{njuoptfall2019@163.com}.
+    \item Please use the provided \LaTeX{} file as a template. If you are not familiar with \LaTeX{}, you can also use Word to generate a \textbf{PDF} file.
+\end{itemize}
+\paragraph{Problem 1: Equality Constrained Least-squares}
+~\\
+Consider the equality constrained least-squares problem
+\begin{gather*}
+\begin{matrix}
+\text{minimize~~} & \frac{1}{2}\|Ax-b\|_2^2\\
+\text{subject to} & Gx=h~~\\
+\end{matrix}
+\end{gather*}
+where $A\in\mathbf{R}^{m\times n}$ with $\mathbf{rank}~A=n$, and $G\in\mathbf{R}^{p\times n}$ with $\mathbf{rank}~G=p$.
+\begin{enumerate}[a)]
+    \item Derive the Lagrange dual problem with Lagrange multiplier vector $v$.
+    \item Derive expressions for the primal solution $x^\star$ and the dual solution $v^\star$.
+\end{enumerate}
+\begin{solution}
+\begin{enumerate}[a)]
+  \item The lagrange function is
+  \begin{equation}\label{}
+    L(x,v)=\frac{1}{2}\|Ax-b\|_2^2+v^T(Gx-h)=
+    %\frac{1}{2}(x^TA^TAx-2b^TAx+b^Tb)+v^T(Gx-h)=
+    \frac{1}{2}x^TA^TAx+(v^TG-b^TA)x+\frac{1}{2}b^Tb-v^Th
+  \end{equation}
+  Make $\nabla_x L(x,v)=A^TAx+G^Tv-A^Tb=0$, we can get minimizer $x=(A^TA)^{-1}(A^Tb-G^Tv)$. So the dual function is
+  \begin{equation}\label{}
+    g(v)=\inf_x L(x,v)=-\frac{1}{2}(G^Tv-A^Tb)^T(A^TA)^{-1}(G^Tv-A^Tb)+\frac{1}{2}b^Tb-v^Th
+  \end{equation}
+  So the lagrange dual problem is
+  \begin{gather*}
+  \begin{matrix}
+   \text{maximize~~} & -\frac{1}{2}(G^Tv-A^Tb)^T(A^TA)^{-1}(G^Tv-A^Tb)+\frac{1}{2}b^Tb-v^Th
+  \end{matrix}
+  \end{gather*}
+  \item From KKT conditions we can get
+  $\nabla L(x^*,v^*)=A^TAx^*+G^Tv^*-A^Tb=0$ and $Gx^*=h$.
+  Make $x^*=(A^TA)^{-1}(A^Tb-G^Tv^*)$ into $Gx^*=h$ we can get
+  \begin{equation}\label{}
+    v^*=(G(A^TA)^{-1}G^T)^{-1}(G(A^TA)^{-1}A^Tb-h)
+  \end{equation}
+  Therefore we get
+  \begin{equation}\label{}
+    x^*=(A^TA)^{-1}(A^Tb-G^T(G(A^TA)^{-1}G^T)^{-1}(G(A^TA)^{-1}A^Tb-h))
+  \end{equation}
+\end{enumerate}
+Done.
+\end{solution}
+
+\paragraph{Problem 2: Support Vector Machines}
+~\\
+Consider the following optimization problem
+\begin{gather*}
+\begin{matrix}
+\text{minimize~~} & \sum_{i=1}^n\max\left(0,1-y_i(w^Tx_i+b)\right)+\frac{\lambda}{2}\|w\|_2^2\\
+\end{matrix}
+\end{gather*}
+where $x_i\in\mathbf{R}^{d},y_i\in \mathbf{R},i=1,\cdots,n$ are given, and $w\in \mathbf{R}^d,b\in\mathbf{R}$ are the variables.
+\begin{enumerate}[a)]
+    \item Derive an equivalent problem by introducing new variables $u_i,i=1,\cdots,n$ and equality constraints \[u_i=y_i(w^Tx_i+b),i=1,\cdots,n.\]
+    \item Derive the Lagrange dual problem of the above equivalent problem.
+    \item Give the Karush-Kuhn-Tucker conditions.
+\end{enumerate}
+
+\noindent\emph{Hint: Let $\ell(x)=\max(0,1-x)$. Its conjugate function $\ell^\ast(y)=\sup\limits_{x}(yx-\ell(x))=\left\{
+\begin{aligned}
+&y, \quad-1\leq y\leq0 \\
+&\infty,\quad\text{otherwise}
+\end{aligned}
+\right.$}
+\begin{solution}
+\begin{enumerate}[a)]
+  \item The problem is:
+    \begin{equation}\label{}
+      \begin{aligned}\label{}
+         \text{minimize } & \sum_{i=1}^n\max(0,1-u_i)+\frac{\lambda}{2}\|w\|_2^2 \\
+         \text{subject to } & u_i=y_i(w^Tx_i+b),i=1,\cdots,n.
+      \end{aligned}
+    \end{equation}
+  \item The Lagrange function is
+   \begin{equation}\label{}
+     L(w,b,u_1,\cdots,u_n,v_1,\cdots,v_n)=\sum_{i=1}^n\max(0,1-u_i)+\frac{\lambda}{2}\|w\|_2^2+\sum_{i=1}^{n}v_i(u_i-y_i(w^Tx_i+b))
+   \end{equation}
+   To get the dual function, minimize $w$, $b$ and $u_i$. Minimize $w$, we have
+   $\frac{\partial L}{\partial w}=\lambda w+ \sum_{i=1}^{n}(-v_iy_ix_i)=0$. So $w^*=\frac{1}{\lambda}\sum_{i=1}^{n}v_iy_ix_i$. Minimize $b$, we have
+   $\frac{\partial L}{\partial b}=\sum_{i=1}^{n}(-v_iy_i)=0$, if not, the mininum could be $-\infty$. And $\sum_{i=1}^{n}v_iy_ix_i^T(\sum_{j=1}^{n}v_jy_jx_j)=\sum_{i=1}^{n}v_iy_i(\sum_{j=1}^{n}v_jy_jx_i^Tx_j)$.
+   Therefore, in that case, let $l(u_i)=max(0,1-u_i)$, we have:
+   \begin{equation}\label{}
+   \begin{aligned}\label{}
+     g(v_1,\cdots,v_n) =& \frac{1}{2|\lambda|}\|\sum_{i=1}^{n}v_iy_ix_i\|_2^2-
+     \frac{1}{\lambda}\sum_{i=1}^{n}v_iy_i(\sum_{j=1}^{n}v_jy_jx_i^Tx_j)
+     +\inf_{u_i}(\sum_{i=1}^n\max(0,1-u_i)+v_iu_i) \\
+      =& \frac{1}{2|\lambda|}\|\sum_{i=1}^{n}v_iy_ix_i\|_2^2-
+     \frac{1}{\lambda}\sum_{i=1}^{n}v_iy_i(\sum_{j=1}^{n}v_jy_jx_i^Tx_j)
+     -\sum_{i=1}^nl^*(-v_i)
+   \end{aligned}
+   \end{equation}
+   To maximize it, we must have $0\leq v_i\leq 1$. So the Lagrange dual problem is:
+   \begin{equation}\label{}
+   \begin{aligned}\label{}
+     \text{maximize } &  \frac{1}{2|\lambda|}\|\sum_{i=1}^{n}v_iy_ix_i\|_2^2-
+     \frac{1}{\lambda}\sum_{i=1}^{n}v_iy_i(\sum_{j=1}^{n}v_jy_jx_i^Tx_j)
+     +\sum_{i=1}^{n}v_i\\
+      \text{subject to }& \sum_{i=1}^{n}v_iy_i=0,\quad 0\le v_i\le 1,i=1,\cdots,n.
+   \end{aligned}
+   \end{equation}
+  \item The KKT conditions are:
+    \begin{equation}\label{}
+   \begin{aligned}\label{}
+     &  w^*=\frac{1}{\lambda}\sum_{i=1}^{n}v_i^*y_ix_i\\
+     &  \sum_{i=1}^{n}v_i^*y_i=0\\
+     &  u_i^*=y_i({w^*}^Tx_i+b^*),i=1,\cdots,n.
+   \end{aligned}
+   \end{equation}
+\end{enumerate}
+Done.
+\end{solution}
+
+\paragraph{Problem 3: Euclidean Projection onto the Simplex}
+~\\
+Consider the following optimization problem
+\begin{gather*}
+\begin{matrix}
+\text{minimize~~} & \frac{1}{2}\left\|y-x\right\|^2_2\quad\\
+\text{subject to} & \mathbf{1}^Ty=r\quad\quad\\
+&y\succeq0\quad\quad\quad
+\end{matrix}
+\end{gather*}
+where $r>0$, $x\in \mathbb{R}^n$ is given, and $y\in \mathbf{R}^n$ is the variable. Give an algorithm to solve this problem and prove the correctness of your algorithm.
+
+\noindent\emph{Hint: Derive the Lagrangian of this problem and apply the Karush-Kuhn-Tucker conditions. If you need more hints, please read the following paper \cite{Wang2013}}
+\begin{solution}
+\begin{enumerate}
+  \item Algorithm:\\
+        Input: $x\in R^n$\\
+        Sort x into u:$u_1\ge u_2\ge\cdots\ge u_n$\\
+        Find $\rho=max\{1\le j\le n:u_j+\frac{1}{j}(r-\sum_{i=1}^{j}u_i)>0\}$\\
+        Define $\lambda=\frac{1}{\rho}(r-\sum_{i=1}^{\rho}u_i)$\\
+        Output:y s.t. $y_i=max\{x_i+\lambda,0\},i=1,\cdots,n$.
+  \item Proof:\\
+        The lagrange function of this problem is($\lambda$ and $v$ is the equality and inequality Lagrange multipliers respectively)
+        \begin{equation}\label{}
+          L(y,\lambda,v)=\frac{1}{2}\|y-x\|^2_2-\lambda(\mathbf{1}^Ty-r)-v^Ty
+        \end{equation}
+        Assume the optimal solution y then the KKT conditions are following:
+        \begin{equation}\label{}
+          y_i-x_i-\lambda-v_i=0,\quad y_i\ge0,v_i\ge0,\quad v_iy_i=0,\quad \sum_{i=1}^{n}y_i=r
+        \end{equation}
+        From $v_iy_i=0$ we have
+        \begin{equation}\label{}
+        \begin{aligned}
+        &if\quad y_i>0:v_i=0,y_i=x_i+\lambda>0\\
+        &if\quad y_i=0:v_i\ge0,y_i=x_i+\lambda+v_i=0,\text{which is } x_i+\lambda=-v_i<0
+        \end{aligned}
+        \end{equation}
+        So the components of the optimal solution y that are zeros correspond to the smaller components of x. Assume the components of x are sorted and y uses the same ordering:
+        \begin{equation}\label{}
+        \begin{aligned}
+        &x_1\ge\cdots\ge x_{\rho}\ge x_{\rho+1}\ge\cdots\ge x_n\\
+        &y_1\ge\cdots\ge y_{\rho}\ge y_{\rho+1}=\cdots=y_n=0
+        \end{aligned}
+        \end{equation}
+        where $\rho$ is the number of positive components of y. So from $\sum_{i=1}^{n}y_i=r$ we have
+        \begin{equation}\label{}
+          \sum_{i=1}^{n}y_i=\sum_{i=1}^{\rho}y_i=\sum_{i=1}^{\rho}(x_i+\lambda)=r
+        \end{equation}
+        Which implies $\lambda=\frac{1}{\rho}(r-\sum_{i=1}^{\rho}x_i)$.
+        So if we can compute $\rho$ then we know $\lambda$ and then we know the optimal solution y because $y_i=x_i+\lambda$ if $x_i+\lambda>0$ else $y_i=0$. \\
+        Therefore, we are going to prove $\rho=max\{1\le j\le n:x_j+\frac{1}{j}(r-\sum_{i=1}^{j}x_i)>0\}$.\\
+        We have $\lambda\rho=r-\sum_{i=1}^{\rho}x_i$, we are going to show that $x_j+\frac{1}{j}(r-\sum_{i=1}^{j}x_i)>0$ for $j\le\rho$ and $x_j+\frac{1}{j}(r-\sum_{i=1}^{j}x_i)\le0$ for $j>\rho$.
+        \begin{enumerate}[\quad 1)]
+          \item $j=\rho$, we have $x_{\rho}+\frac{1}{\rho}(r-\sum_{i=1}^{\rho}x_i)=x_{\rho}+\lambda=y_{\rho}>0$
+          \item $j<\rho$,we have
+          \begin{equation}\label{}
+          \begin{aligned}\label{}
+            x_j+\frac{1}{j}(r-\sum_{i=1}^{j}x_i)=& \frac{1}{j}(jx_j+r-\sum_{i=1}^{j}x_i)=
+            \frac{1}{j}(jx_j+\sum_{i=j+1}^{\rho}x_i+r-\sum_{i=1}^{\rho}x_i) \\
+             =&\frac{1}{j}(jx_j+\sum_{i=j+1}^{\rho}x_i+\rho\lambda+j\lambda-j\lambda)
+             =\frac{1}{j}(j(x_j+\lambda)+\sum_{i=j+1}^{\rho}(x_i+\lambda))
+          \end{aligned}
+          \end{equation}
+          Because $x_i+\lambda>0$ for $i=j,\cdots,\rho$,so $x_j+\frac{1}{j}(r-\sum_{i=1}^{j}x_i)>0$.
+          \item $j>\rho$,we have
+          \begin{equation}\label{}
+          \begin{aligned}\label{}
+            x_j+\frac{1}{j}(r-\sum_{i=1}^{j}x_i)=& \frac{1}{j}(jx_j+r-\sum_{i=1}^{j}x_i)=\frac{1}{j}(jx_j+r-\sum_{i=1}^{\rho}x_i-\sum_{i=\rho+1}^{j}x_i) \\
+             =&\frac{1}{j}(jx_j+\rho\lambda-\sum_{i=\rho+1}^{j}x_i+\rho x_j-\rho x_j)
+             =\frac{1}{j}(\rho(x_j+\lambda)+\sum_{i=\rho+1}^{j}(x_j-x_i))
+          \end{aligned}
+          \end{equation}
+          Because $x_j+\lambda\le0$ for $j>\rho$ and $x_j-x_i\le0$ for $j\ge i$ since x is sorted, we have $x_j+\frac{1}{j}(r-\sum_{i=1}^{j}x_i)<0$.
+        \end{enumerate}
+        Therefore, $\rho=max\{1\le j\le n:x_j+\frac{1}{j}(r-\sum_{i=1}^{j}x_i)>0\}$ correctly denotes the number of positive components of y, and we can know $\lambda$ and we get the optimal solution y by computing $y_i=max\{x_i+\lambda,0\}$ since x is given.\\
+        Above all, the Algorithm can correctly give the optimal solution of the problem.
+\end{enumerate}
+Done.
+\end{solution}
+
+\paragraph{Problem 4: Optimality Conditions}
+~\\
+Consider the problem
+\begin{equation*}
+    \begin{split}
+        &\text{minimize~~} \quad  \text{tr}(2X) - \log{\det{(3X)}} \\
+        &\text{subject to} \quad~  2Xs=y
+    \end{split}
+\end{equation*}
+with variable $X \in \mathbf{S}^n$ and domain $\mathbf{S}_{++}^n$. Here, $y \in \mathbf{R}^n$ and $s \in \mathbf{R}^n$ are given, with $s^T y =1$.
+\begin{enumerate}[a)]
+    \item Give the Lagrange and then derive the Karush-Kuhn-Tucker conditions.
+    \item Verify that the optimal solution is given by
+    \begin{equation*}
+        X^\star = \frac{1}{2} \left(I + yy^T - \frac{ss^T}{s^T s}\right) .
+    \end{equation*}
+\end{enumerate}
+
+\begin{solution}
+\begin{enumerate}[a)]
+  \item The lagrange function is $L(X,v)=\text{tr}(2X) - \log{\det{(3X)}}-v^T(2Xs-y)$. And $\nabla_X L(X,v)=2I-X^{-1}+(vs^T+sv^T)$.
+      So the KKT conditions are:
+      \begin{equation}\label{}
+        X^*\succ0,\qquad 2X^*s=y,\qquad 2I-{X^*}^{-1}+(vs^T+sv^T)=0
+      \end{equation}
+  \item We have
+  \begin{equation}\label{}
+  s=\frac{1}{2}{X^*}^{-1}y=(I+\frac{1}{2}(vs^T+sv^T))
+      y=y+\frac{1}{2}(vs^Ty+sv^Ty)=y+\frac{1}{2}(v+v^Tys)
+  \end{equation}
+  So \begin{equation}\label{}
+    y^Ts=1=y^T(y+\frac{1}{2}(v+v^Tys))=y^Ty+\frac{1}{2}(y^Tv+y^Tv^Tys)
+  =y^Ty+\frac{1}{2}(v^Ty+(v^Ty)y^Ts)=y^Ty+v^Ty
+  \end{equation}
+  Take $v^Ty=1-y^Ty$ into $s=y+\frac{1}{2}(v+(v^Ty)s)$ then we have
+  \begin{equation}\label{}
+    v=(1+y^Ty)s-2y
+  \end{equation}
+  Therefore,
+  \begin{equation}\label{}
+  \begin{aligned}\label{}
+    {X^*}^{-1} &=2I+((1+y^Ty)s-2y)s^T+s((1+y^Ty)s^T-2y^T) \\
+     & =2I+2(1+y^Ty)ss^T-2ys^T-2sy^T
+  \end{aligned}
+  \end{equation}
+  Multiply it with the condition given above:
+  \begin{equation}\label{}
+  \begin{aligned}\label{}
+    &\quad[2I+2(1+y^Ty)ss^T-2ys^T-2sy^T][\frac{1}{2}(I + yy^T - \frac{ss^T}{s^T s})] \\
+    &=(I+yy^T-\frac{ss^T}{s^Ts}+(1+y^Ty)(ss^T+sy^T-ss^T)-(ys^T+yy^T-ys^T)
+     -(sy^T+(y^Ty)sy^T-\frac{ss^T}{s^Ts})\\
+    &=I+yy^T-yy^T-(\frac{ss^T}{s^Ts})+(\frac{ss^T}{s^Ts})+(1+y^Ty)sy^T-(1+y^Ty)sy^T\\
+    &=I
+  \end{aligned}
+  \end{equation}
+  Therefore, the inverse matrix of $2I+2(1+y^Ty)ss^T-2ys^T-2sy^T$ is $\frac{1}{2}(I + yy^T - \frac{ss^T}{s^T s})$\\
+  So $X^*=({X^*}^{-1})^{-1}=\frac{1}{2}(I + yy^T - \frac{ss^T}{s^T s})$.
+\end{enumerate}
+Done.
+\end{solution}
+
+
+\begin{thebibliography}{1}
+
+\bibitem{Wang2013}
+Weiran Wang, and Miguel \'{A}. Carreira-Peroi\~{n}\'{a}n.
+\newblock Projection onto the probability simplex: An efficient algorithm with a simple proof, and an application.
+\newblock \emph{arXiv:1309.1541}, 2013.
+
+\end{thebibliography}
+
+\end{document}
